@@ -1,4 +1,9 @@
 ## Scrape from Excel data tables finding intervals where string appears, in order to lookup postcode and data
+# Note: openpyxl is slower than straightout pandas (actually is faster, especially in ReadOnly,
+#       but one has to be careful setting up boundaries) however it has a better correspondence with the original Worksheet,
+#       keeping empty cells and registering them as None instead of NaN.
+# Going from Openpyxl to Pandas pd.DataFrame(work is the slowest procedure, should NOT be done on the whole sheet
+# the other functions are an attempt to solution, by using ranges in openpyxl but had no time to finilize the implementation.
 
 #Find Strings in Cells
 def findStrInCell(stri,ws):
@@ -36,6 +41,29 @@ def search_Ranges_WorkBk(flnm,strFnd, imp = None):
     for elem in fndLst: rows.append(elem[1])
 
     return list(ranges(rows))
+
+def from_Rng_to_DataFrame(flnm,rng, imp = None):
+    if imp is None:
+        import openpyxl as op
+        import pandas as pd
+
+    workb = op.load_workbook(flnm, read_only = True, data_only = True)
+    works = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
+
+    d = []
+    for ranges in rng:
+        for row in range(ranges[0],ranges[1]):
+            for cell in list(works.rows)[row]:
+                print row, cell.value
+    print d
+
+    quit()
+
+    pd.DataFrame(d)
+
+
+    print d.loc[d['region'].isin(['London'])]
+    #print df
 
 # rangesList = search_Ranges_WorkBk('Pers_Mortage_PCS_2016-q3.xlsx',"London")
 # print rangesList

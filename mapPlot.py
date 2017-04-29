@@ -47,7 +47,7 @@ def mP(flnm, imp = None):
 #-        (optional)imp: Bool, if to import libraries
 #- output: return to dataframe of
 #-         ['patches'] Polygon patches
-#-         ['ward_name'] patches name
+#-         ['properties'] patches properties (e.g. ward name, postcode ...etc...)
 #-         ['area_m']  area in sq meters
 #-         ['area_km'] area in sq km
 #- ...
@@ -119,7 +119,7 @@ def mP_Basemap(flnm, imp = None):
         ,'properties': [ward['name'] for ward in m.map_info]
         })
     df_map['area_m'] = df_map['poly'].map(lambda x: x.area)
-    df_map['area_km'] = df_map['area_m'] / 100000
+    df_map['area_km'] = df_map['area_m'] / 10000.
 
     # draw ward patches from polygons
     df_map['patches'] = df_map['poly'].map(lambda x: PolygonPatch(
