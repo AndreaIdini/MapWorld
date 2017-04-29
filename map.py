@@ -12,7 +12,11 @@ import mapPlot
 
 filename="./Map/england_pcs_2012"
 
-patches = mapPlot.mP(filename)
+
+#patches = mapPlot.mP(filename)
+df_map = mapPlot.mP_Basemap(filename); patches = df_map['patches']
+
+#print df_map['ward_name']
 
 fig     = plt.figure()
 ax      = fig.add_subplot(111)
