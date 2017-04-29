@@ -20,22 +20,23 @@ def ranges(a):
             i = j
     yield (b[i], b[-1])
 
+def search_Ranges_WorkBk(flnm,strFnd):
+    workb = op.load_workbook(flnm, read_only = True, data_only = True)
+    #wb.get_sheet_names()
+
+    worksheet = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
+
+    #print( list(findStrInCell("London",worksheet)), sep='\n' ) Python
+
+    fndLst=list(findStrInCell(strFnd,worksheet) )
+    rows=[]
+    for elem in fndLst: rows.append(elem[1])
+
+    return list(ranges(rows))
+
 filename = 'Pers_Mortage_PCS_2016-q3.xlsx'
 stringToFind = "London"
 
-workb = op.load_workbook(filename, read_only = True, data_only = True)
-#wb.get_sheet_names()
-
-worksheet = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
-
-#print( list(findStrInCell("London",worksheet)), sep='\n' ) Python
-
-foundList=list(findStrInCell(stringToFind,worksheet) )
-rows=[]
-for elem in foundList: rows.append(elem[1])
-
-rangesList=list(ranges(rows))
+rangesList = search_Ranges_WorkBk(filename,stringToFind)
 
 print rangesList
-
-print "finished"
