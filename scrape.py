@@ -1,10 +1,9 @@
 ## Scrape from Excel data tables finding intervals where string appears, in order to lookup postcode and data
-# Note: openpyxl is slower than straightout pandas (actually could be faster, especially in ReadOnly,
-#       but one has to be careful setting up boundaries) however it has a better correspondence with the original Worksheet,
+# Note: openpyxl is slower than straightout pandas (it probably could be faster, especially in ReadOnly reading time is lower,
+#       especially one has to be careful setting up boundaries) however it has a better correspondence with the original Worksheet,
 #       keeping empty cells and registering them as None instead of NaN.
-# Going from Openpyxl to Pandas pd.DataFrame(work is the slowest procedure, should NOT be done on the whole sheet,
-# even though is easiest, simply pd.Dataframe(worksheet)
-# the other functions are an attempt to solution, by using ranges in openpyxl but had no time to finilize the implementation.
+# Going from Openpyxl to Pandas pd.DataFrame(worksheet) is the slowest procedure, should NOT be done on the whole sheet,
+# even though is easiest
 
 #Find Strings in Cells
 def findStrInCell(stri,ws):
@@ -51,17 +50,13 @@ def from_Rng_to_DataFrame(flnm,rng, imp = None):
     workb = op.load_workbook(flnm, data_only = True)
     works = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
 
-    wb       = op.Workbook()
-    merge_ws = wb.active
-
     headline = works[2] # Headers for these .xlsx
 
     headlist = []
     for cell in headline:
         headlist.append(cell.value)
 
-    df = pd.DataFrame(index=headlist)
-    print df
+    df = pd.DataFrame()
 
     for ranges in rng:
         for line in works.iter_rows( min_row=ranges[0], max_row=ranges[1] ):
@@ -70,6 +65,7 @@ def from_Rng_to_DataFrame(flnm,rng, imp = None):
                 d.append(cell.value)
             df = df.append(pd.Series(d),ignore_index=True)
 
+    df.columns = headlist
     print df
 
 # rangesList = search_Ranges_WorkBk('Pers_Mortage_PCS_2016-q3.xlsx',"London")
