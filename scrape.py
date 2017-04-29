@@ -1,7 +1,5 @@
 ## Scrape from Excel data tables finding intervals where string appears, in order to lookup postcode and data
 
-import openpyxl as op
-
 #Find Strings in Cells
 def findStrInCell(stri,ws):
     for row in ws.iter_rows():
@@ -20,13 +18,18 @@ def ranges(a):
             i = j
     yield (b[i], b[-1])
 
-def search_Ranges_WorkBk(flnm,strFnd):
+#- search ranges where string StrFnd appears in workbook flnm.
+#- Input : flnm  : filename of workbook, excel or equivalent, to be read by openpyxl
+#-         strFnd: string to be found in workbook, to be noted that it looks only in the last sheet.
+#-         imp   : (Optional) if set to something, will not import openpyxl, for faster use if openpyxl is already imported
+#- Output: list of interval ranges where the string has been found.
+def search_Ranges_WorkBk(flnm,strFnd, imp = None):
+    if imp is None:
+        import openpyxl as op
+
     workb = op.load_workbook(flnm, read_only = True, data_only = True)
-    #wb.get_sheet_names()
 
     worksheet = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
-
-    #print( list(findStrInCell("London",worksheet)), sep='\n' ) Python
 
     fndLst=list(findStrInCell(strFnd,worksheet) )
     rows=[]
@@ -34,9 +37,5 @@ def search_Ranges_WorkBk(flnm,strFnd):
 
     return list(ranges(rows))
 
-filename = 'Pers_Mortage_PCS_2016-q3.xlsx'
-stringToFind = "London"
-
-rangesList = search_Ranges_WorkBk(filename,stringToFind)
-
-print rangesList
+# rangesList = search_Ranges_WorkBk('Pers_Mortage_PCS_2016-q3.xlsx',"London")
+# print rangesList

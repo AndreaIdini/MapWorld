@@ -111,7 +111,7 @@ def mP_Basemap(flnm, imp = None):
     #     fontcolor='#555555',
     #     zorder=5)
 
-    print m.map_info
+    #print m.map_info
 
     # set up a map dataframe
     df_map = pd.DataFrame({

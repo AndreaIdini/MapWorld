@@ -7,14 +7,19 @@ from descartes import PolygonPatch
 import matplotlib
 import numpy as np
 import mapPlot
-
+import scrape
 #   -- plot --
 
-filename="./Map/england_pcs_2012_wgs84"
+mapName="./Map/england_pcs_2012_wgs84"
+dataFile="Pers_Mortage_PCS_2016-q3.xlsx"
+placeName="London"
+
+rangesList = scrape.search_Ranges_WorkBk(dataFile,placeName)
+print rangesList
 
 #patches = mapPlot.mP(filename)
-df_map = mapPlot.mP_Basemap(filename); patches = df_map['patches']
-#print df_map['ward_name']
+df_map = mapPlot.mP_Basemap(mapName); patches = df_map['patches']
+#print df_map['properties']
 
 fig     = plt.figure()
 ax      = fig.add_subplot(111)
