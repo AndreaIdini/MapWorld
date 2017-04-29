@@ -20,14 +20,17 @@ def ranges(a):
             i = j
     yield (b[i], b[-1])
 
-workb = op.load_workbook('Pers_Mortage_PCS_2016-q3.xlsx', read_only = True, data_only = True)
+filename = 'Pers_Mortage_PCS_2016-q3.xlsx'
+stringToFind = "London"
+
+workb = op.load_workbook(filename, read_only = True, data_only = True)
 #wb.get_sheet_names()
 
-worksheet = workb.worksheets[-1]
+worksheet = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
 
 #print( list(findStrInCell("London",worksheet)), sep='\n' ) Python
 
-foundList=list(findStrInCell("London",worksheet) )
+foundList=list(findStrInCell(stringToFind,worksheet) )
 rows=[]
 for elem in foundList: rows.append(elem[1])
 
