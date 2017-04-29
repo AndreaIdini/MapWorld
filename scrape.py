@@ -1,8 +1,9 @@
 ## Scrape from Excel data tables finding intervals where string appears, in order to lookup postcode and data
-# Note: openpyxl is slower than straightout pandas (actually is faster, especially in ReadOnly,
+# Note: openpyxl is slower than straightout pandas (actually could be faster, especially in ReadOnly,
 #       but one has to be careful setting up boundaries) however it has a better correspondence with the original Worksheet,
 #       keeping empty cells and registering them as None instead of NaN.
-# Going from Openpyxl to Pandas pd.DataFrame(work is the slowest procedure, should NOT be done on the whole sheet
+# Going from Openpyxl to Pandas pd.DataFrame(work is the slowest procedure, should NOT be done on the whole sheet,
+# even though is easiest, simply pd.Dataframe(worksheet)
 # the other functions are an attempt to solution, by using ranges in openpyxl but had no time to finilize the implementation.
 
 #Find Strings in Cells
@@ -47,23 +48,29 @@ def from_Rng_to_DataFrame(flnm,rng, imp = None):
         import openpyxl as op
         import pandas as pd
 
-    workb = op.load_workbook(flnm, read_only = True, data_only = True)
+    workb = op.load_workbook(flnm, data_only = True)
     works = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
 
-    d = []
+    wb       = op.Workbook()
+    merge_ws = wb.active
+
+    headline = works[2] # Headers for these .xlsx
+
+    headlist = []
+    for cell in headline:
+        headlist.append(cell.value)
+
+    df = pd.DataFrame(index=headlist)
+    print df
+
     for ranges in rng:
-        for row in range(ranges[0],ranges[1]):
-            for cell in list(works.rows)[row]:
-                print row, cell.value
-    print d
+        for line in works.iter_rows( min_row=ranges[0], max_row=ranges[1] ):
+            d = []
+            for cell in line:
+                d.append(cell.value)
+            df = df.append(pd.Series(d),ignore_index=True)
 
-    quit()
-
-    pd.DataFrame(d)
-
-
-    print d.loc[d['region'].isin(['London'])]
-    #print df
+    print df
 
 # rangesList = search_Ranges_WorkBk('Pers_Mortage_PCS_2016-q3.xlsx',"London")
 # print rangesList
