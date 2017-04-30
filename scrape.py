@@ -42,13 +42,22 @@ def search_Ranges_WorkBk(flnm,strFnd, imp = None):
 
     return list(ranges(rows))
 
-def from_Rng_to_DataFrame(flnm,rng, imp = None):
+#- From a filename, in a given range, import worksheet into pandas DataFrame
+#- Input : flnm : filename of workbook, excel or equivalent, to be read by openpyxl
+#-         rng  : (Optional) list of ranges where to compose the DataFrame, if not set, takes the whole workbook.
+#-         imp  : (Optional) if set to something, will not import openpyxl, for faster use if openpyxl is already imported
+#- Output       : Dataframe with all data
+
+def from_Rng_to_DataFrame(flnm,rng = None, imp = None):
     if imp is None:
         import openpyxl as op
         import pandas as pd
 
     workb = op.load_workbook(flnm, data_only = True)
     works = workb.worksheets[-1] #In all workbooks is the last sheet that contains data
+
+    if rng is None:
+        rng = [(works.min_row,works_max_row)]
 
     headline = works[2] # Headers for these .xlsx
 
@@ -66,7 +75,8 @@ def from_Rng_to_DataFrame(flnm,rng, imp = None):
             df = df.append(pd.Series(d),ignore_index=True)
 
     df.columns = headlist
-    print df
+
+    return df
 
 # rangesList = search_Ranges_WorkBk('Pers_Mortage_PCS_2016-q3.xlsx',"London")
 # print rangesList

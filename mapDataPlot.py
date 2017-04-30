@@ -12,7 +12,7 @@
 #-         ['area_m']  area in sq meters
 #-         ['area_km'] area in sq km
 #- ...
-def mP_data(flnm, imp = None):
+def mP_data(flnm, df, imp = None):
     if imp is None:
         import pandas as pd
         import matplotlib.pyplot as plt
@@ -72,13 +72,17 @@ def mP_data(flnm, imp = None):
     #     fontcolor='#555555',
     #     zorder=5)
 
-    #print m.map_info
-
     # set up a map dataframe
-    df_map = pd.DataFrame({
-        'poly': [Polygon(xy) for xy in m.map]
-        ,'properties': [ward['name'] for ward in m.map_info]
-        })
+
+    temp_df = pd.DataFrame()
+
+    for dicti in m.map_info:
+        temp_df = temp_df.append(pd.Series(dicti),ignore_index=True)
+
+    df_map = pd.DataFrame({'poly': [Polygon(xy) for xy in m.map]})
+
+    df_map = pd.concat([df_map, temp_df], axis=1, join_axes=[df_map.index])
+
     df_map['area_m'] = df_map['poly'].map(lambda x: x.area)
     df_map['area_km'] = df_map['area_m'] / 10000.
 
