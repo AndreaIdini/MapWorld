@@ -18,6 +18,7 @@ def mP_data(flnm, df, imp = None):
     if imp is None:
         import pandas as pd
         import matplotlib.pyplot as plt
+        import matplotlib.colors as colors
         from mpl_toolkits.basemap import Basemap
         from shapely.geometry import Point, Polygon, MultiPoint, MultiPolygon
         from pysal.esda.mapclassify import Natural_Breaks as nb
@@ -97,41 +98,52 @@ def mP_data(flnm, df, imp = None):
 
     df_map['area_km'] = df_map['area_m'] / 10000.
 
-
     if len(df_map.index) == len(df.index):
         print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
         print '!! WARNING : SHAPE OF DATAFRAMES NOT CONSISTENT !!'
         print '!! --- check: df_map  and df in mapDataPlot --- !!'
         print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
 
+# Merge dataframes
     df_map = pd.merge(left=df_map, right=df, left_on='label', right_on='Sector',
                       how='inner')
 
-## Calculates Jenks natural breaks
-    # breaks = nb ( df_map[df_map['2016 Q3'].notnull()].values,
-    #     initial=10e06,
-    #     k=num_colors)
-    #
-    # jenbin = pd.DataFrame({'jenks_bins': breaks.yb}, index=df_map[df_map['2016 Q3'].notnull()].index)
-    # df_map = df_map.join(jenbin)
-    # df_map.jenks_bins.fillna(-1, inplace=True)
+    print '... built map frame ...'
+## Calculates Jenks natural breaks, over notnull column
 
-## Setup ColorMap
-    # cm = plt.get_cmap('bwr')
-    # scheme = [cm(i / num_colors) for i in range(num_colors)]
-    # bins = np.linspace(values.min(), values.max(), num_colors)
+    prices = df_map[df_map['2016 Q3'].notnull()]['2016 Q3'].tolist()
 
-    # df['bin'] = np.digitize(values, bins) - 1
-    # df.sort_values('bin', ascending=False).head(10)
-    # cmap = mpl.colors.ListedColormap(scheme)
-    # cb = mpl.colorbar.ColorbarBase(ax_legend, cmap=cmap, ticks=bins, boundaries=bins, orientation='horizontal')
-    # cb.ax.set_xticklabels([str(round(i, 1)) for i in bins])
+    breaks = nb ( prices,
+        initial=250, #number of initial solutions in iteriative Jenks algo
+        k=num_colors )
+
+    print 'Calculting Jenks Natural breaks for binning'
+    jenbin = pd.DataFrame({'jenks_bins': breaks.yb}, index=df_map[df_map['2016 Q3'].notnull()].index)
+    df_map = df_map.join(jenbin)
+    df_map.jenks_bins.fillna(-1, inplace=True)
 
     # draw ward patches from polygons
+
+    print 'Building Patches'
+
     df_map['patches'] = df_map['poly'].map(lambda x: PolygonPatch(
         x,
         fc='0.33',
         edgecolor='w', lw=.2,
         alpha=.9))
 
-    return df_map;
+    print 'Last touches of color, with Jenks'
+
+# Set colors using Jenks breaks
+## Setup ColorMap
+    colorm = plt.get_cmap('bwr')
+
+    norm = colors.Normalize()
+    pc = PatchCollection(df_map['patches'], match_original=True)
+    print df_map['jenks_bins'].values
+    print norm(df_map['jenks_bins'].values)
+    print colorm(norm(df_map['jenks_bins'].values))
+
+    pc.set_facecolor(colorm(norm(df_map['jenks_bins'].values)))
+
+    return pc;
