@@ -1,9 +1,9 @@
 ## Function to plot choropleth maps of data on top of shapefiles map ##
 ## A. Idini 2017 ##
 
-#- function mP_Basemap takes in input filename and outputs patches for plotting -#
+#- function mP_data takes in input filename and datafile outputs patches for plotting -#
 #- builds up a whole Basemap--based Panda dataframe with the list of patches,
-#- and the corresponding wards names from shapefile
+#- and the corresponding wards names from shapefile and datafile
 #- Input: flnm: string, filename path
 #-        (optional)imp: Bool, if to import libraries
 #- output: return to dataframe of
@@ -94,6 +94,13 @@ def mP_data(flnm, df, imp = None):
 
     df_map['area_km'] = df_map['area_m'] / 10000.
 
+
+    if len(df_map.index) == len(df.index):
+        print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+        print '!! WARNING : SHAPE OF DATAFRAMES NOT CONSISTENT !!'
+        print '!! --- check: df_map  and df in mapDataPlot --- !!'
+        print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+
     # draw ward patches from polygons
     df_map['patches'] = df_map['poly'].map(lambda x: PolygonPatch(
         x,
@@ -101,7 +108,10 @@ def mP_data(flnm, df, imp = None):
         ec='#787878', lw=.75, alpha=.9,
         zorder=4))
 
-    print df_map
+
+    df_map = pd.merge(left=df_map, right=df, left_on='label', right_on='Sector',
+                      how='inner')
+
 
 
     return df_map;

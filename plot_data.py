@@ -26,7 +26,7 @@ dataFile = scrape.from_Rng_to_DataFrame(dataFlnm,rangesList)
 
 #patches = mapPlot.mP(filename)
 df_map = mapDataPlot.mP_data(mapName,dataFile); patches = df_map['patches']
-#print df_map['properties']
+print df_map
 
 fig     = plt.figure()
 ax      = fig.add_subplot(111)
