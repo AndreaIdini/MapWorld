@@ -5,7 +5,7 @@ from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 from descartes import PolygonPatch
 import matplotlib
-#import numpy as np
+import numpy as np
 import pandas as pd
 import openpyxl as op
 
@@ -24,14 +24,12 @@ rangesList = scrape.search_Ranges_WorkBk(dataFlnm,placeName)
 #print rangesList
 dataFile = scrape.from_Rng_to_DataFrame(dataFlnm,rangesList)
 
-#patches = mapPlot.mP(filename)
-df_map = mapDataPlot.mP_data(mapName,dataFile); patches = df_map['patches']
-print df_map
+df_map = mapDataPlot.mP_data(mapName,dataFile);
 
 fig     = plt.figure()
 ax      = fig.add_subplot(111)
 
-ax.add_collection(PatchCollection(patches,facecolor='0.75', edgecolor='w', linewidths=.2))
+ax.add_collection(PatchCollection(df_map['patches'].values,match_original=True))
 
 ax.axis('auto')#; ax.axis('off')
 

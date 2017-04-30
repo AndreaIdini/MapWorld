@@ -13,11 +13,14 @@
 #-         ['area_km'] area in sq km
 #- ...
 def mP_data(flnm, df, imp = None):
+    num_colors = 10
+
     if imp is None:
         import pandas as pd
         import matplotlib.pyplot as plt
         from mpl_toolkits.basemap import Basemap
         from shapely.geometry import Point, Polygon, MultiPoint, MultiPolygon
+        from pysal.esda.mapclassify import Natural_Breaks as nb
         from matplotlib.collections import PatchCollection
         from descartes import PolygonPatch
         import fiona
@@ -101,17 +104,34 @@ def mP_data(flnm, df, imp = None):
         print '!! --- check: df_map  and df in mapDataPlot --- !!'
         print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
 
-    # draw ward patches from polygons
-    df_map['patches'] = df_map['poly'].map(lambda x: PolygonPatch(
-        x,
-        fc='#555555',
-        ec='#787878', lw=.75, alpha=.9,
-        zorder=4))
-
-
     df_map = pd.merge(left=df_map, right=df, left_on='label', right_on='Sector',
                       how='inner')
 
+## Calculates Jenks natural breaks
+    # breaks = nb ( df_map[df_map['2016 Q3'].notnull()].values,
+    #     initial=10e06,
+    #     k=num_colors)
+    #
+    # jenbin = pd.DataFrame({'jenks_bins': breaks.yb}, index=df_map[df_map['2016 Q3'].notnull()].index)
+    # df_map = df_map.join(jenbin)
+    # df_map.jenks_bins.fillna(-1, inplace=True)
 
+## Setup ColorMap
+    # cm = plt.get_cmap('bwr')
+    # scheme = [cm(i / num_colors) for i in range(num_colors)]
+    # bins = np.linspace(values.min(), values.max(), num_colors)
+
+    # df['bin'] = np.digitize(values, bins) - 1
+    # df.sort_values('bin', ascending=False).head(10)
+    # cmap = mpl.colors.ListedColormap(scheme)
+    # cb = mpl.colorbar.ColorbarBase(ax_legend, cmap=cmap, ticks=bins, boundaries=bins, orientation='horizontal')
+    # cb.ax.set_xticklabels([str(round(i, 1)) for i in bins])
+
+    # draw ward patches from polygons
+    df_map['patches'] = df_map['poly'].map(lambda x: PolygonPatch(
+        x,
+        fc='0.33',
+        edgecolor='w', lw=.2,
+        alpha=.9))
 
     return df_map;
