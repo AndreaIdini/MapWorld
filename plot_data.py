@@ -18,7 +18,7 @@ mapName   = "./Map/england_pcs_2012_wgs84"
 #dataFile="Pers_Mortage_PCS_2016-q3.xlsx"
 dataFlnm  = "test.xlsx"
 placeName = "London"
-colName   = '2016 Q3'
+colName   = 'index'
 
 print 'Search ranges in ' + dataFlnm + ' ...'
 rangesList = scrape.search_Ranges_WorkBk(dataFlnm,placeName)
@@ -29,7 +29,6 @@ dataFile = scrape.from_Rng_to_DataFrame(dataFlnm,rangesList)
 
 print 'Analyzing market data...'
 dataFile = analyze.add_Index_with_OLS(dataFile)
-quit()
 
 print 'Building map frame using ' + mapName + ' ...'
 

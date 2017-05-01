@@ -54,8 +54,7 @@ def add_Index_with_OLS(df):
         else:
             index_list.append(None)
 
-    print min(x for x in index_list if x is not None)
-    print max(index_list)
+    df['index'] = pd.Series(index_list).values
 
     return df;
 
