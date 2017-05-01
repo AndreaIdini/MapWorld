@@ -4,7 +4,7 @@ Playing with maps, using GIS, [fiona](http://toblerity.org/fiona/manual.html), B
 2 Days challenge, that I blew to overthink OSGB coordinates conversion, and amenities. But fun nonetheless.
 Result in v1.1, badly needing refactoring, for later versions.
 
-### mapPlot.py
+### mapDataPlot.py
  Main program to plot data from .xlsx into map from shapefile.
  .xlsx will have a column of data, a column of keyword, and a column of postcodes.
 
