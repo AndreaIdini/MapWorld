@@ -154,6 +154,7 @@ def mP_data(flnm, colName, df, imp = None):
 
     newcoords = get_bounds(m,df_map)
 
+    print newcoords
     # DOES'T WORK, DOES NOT ACCEPT OSGB COORDS.
     # m.drawmapscale(
     #     newcoords[0], newcoords[1],
@@ -164,11 +165,25 @@ def mP_data(flnm, colName, df, imp = None):
     #     fontcolor='#555555',
     #     zorder=5)
 
+    #Primitive Scale
+    legendy  = newcoords[2]*0.98
+    legendx0 = newcoords[0]*0.98
+    leglength =np.floor((newcoords[1]-newcoords[0])/4/1000)
+
+    legendx1 = newcoords[0]*0.98+leglength*1000.
+
+    # print legendx0, legendx1, legendy
+
+    ax.plot([legendx0,legendx1],[legendy, legendy],  'k-', lw=2)
+    ax.text(legendx0,legendy*0.96,'0')
+    ax.text(legendx1,legendy*0.96,str(int(leglength)))
+
+
     ax.add_collection(pc)
 
     print "axes and plotting!"
 
-    ax.axis('auto')#; ax.axis('off')
+    ax.axis('auto'); ax.axis('off')
     #set aspect ratio to latitude-longitude read
     ax.set_aspect( (newcoords[1]-newcoords[0]) / (newcoords[3]-newcoords[2]) )
     plt.show()
@@ -201,7 +216,7 @@ def get_bounds(m,df_map):
             if max(lat) > lat_max:
                 lat_max = max(lat)
 
-    return lon_min, lat_min, lon_max, lat_max
+    return lon_min, lon_max, lat_min, lat_max
 
 
 def colorbar_index(ncolors, cmap, labels=None, **kwargs):

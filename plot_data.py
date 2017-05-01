@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import openpyxl as op
 
-import mapDataPlot 
+import mapDataPlot
 import scrape
 #   -- plot --
 
