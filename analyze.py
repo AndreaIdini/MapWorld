@@ -3,6 +3,8 @@
 # slope (as growth) and variance (as volatility) indicators
 
 import statsmodels.api as sm #In the future stay tuned for evolution of pandas
+import pandas as pd
+import numpy as np
 
 def add_Index_with_OLS(df):
     plot = False
@@ -31,9 +33,17 @@ def add_Index_with_OLS(df):
             param = ols_param(x0,elem)
             param_list.append(param)
         else:
-            param_list.append(None)
+            param_list.append([None,None,None,None])
+#
 
-    print param_list
+    A = np.array(param_list,dtype=np.float)
+#    print A[0,:] #lines for a given postcode
+#    print A[:,0] #column of all slopes
+
+    mean_slp     = np.mean(A[:,0]); mean_trcpt     = np.mean(A[:,1])
+    mean_err_slp = np.mean(A[:,2]); mean_err_trcpt = np.mean(A[:,3])
+
+    
 
     return df;
 
@@ -47,7 +57,6 @@ def ols_param(x,y):
 
 def plot_fun(x,y):
     import matplotlib.pyplot as plt
-    import numpy as np
 
     x = sm.add_constant(x)  # Adds a constant term, not included in the fit
 
