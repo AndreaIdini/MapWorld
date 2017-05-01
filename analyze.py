@@ -44,20 +44,31 @@ def add_Index_with_OLS(df):
     mean_err_slp = np.nanmean(A[:,2]); mean_err_trcpt = np.nanmean(A[:,3])
     means = [mean_slp,mean_trcpt,mean_err_slp,mean_err_trcpt]
 
-    print param,means
-    print calc_index(param,means)
+    index_list=[]
+    for param in param_list:
+        if None not in param:
+            # print param, means
+            # print calc_index(param,means)
+            index_list.append(calc_index(param,means))
+        #    quit()
+        else:
+            index_list.append(None)
+
+    print min(x for x in index_list if x is not None)
+    print max(index_list)
 
     return df;
 
-def calc_index(par,means):
-    p = np.square(par)
-    m = np.square(means)
-    upandcom = (p[0] - m[0])/m[2]
-    traditio = (p[1] - m[1])/m[3]
-    risk     = p[2]/m[2] + p[3]/m[3]
+def calc_index(p,m):
+    #print 'p,m', p, m
+    upandcom =   np.square(p[0] - m[0])/np.square(m[2])
+    traditio =   np.square(p[1] - m[1])/np.square(m[3])
+    risk     = ( np.square(p[2] - m[2])/np.square(m[2])
+             +   np.square(p[3] - m[3])/np.square(m[3]) )
 
     index = upandcom + traditio - risk
-    index = np.sqrt(index)
+    #print 'idx', index
+    #index = np.sqrt(index)
 
     return index;
 
