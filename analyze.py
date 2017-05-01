@@ -40,12 +40,26 @@ def add_Index_with_OLS(df):
 #    print A[0,:] #lines for a given postcode
 #    print A[:,0] #column of all slopes
 
-    mean_slp     = np.mean(A[:,0]); mean_trcpt     = np.mean(A[:,1])
-    mean_err_slp = np.mean(A[:,2]); mean_err_trcpt = np.mean(A[:,3])
+    mean_slp     = np.nanmean(A[:,0]); mean_trcpt     = np.nanmean(A[:,1])
+    mean_err_slp = np.nanmean(A[:,2]); mean_err_trcpt = np.nanmean(A[:,3])
+    means = [mean_slp,mean_trcpt,mean_err_slp,mean_err_trcpt]
 
-    
+    print param,means
+    print calc_index(param,means)
 
     return df;
+
+def calc_index(par,means):
+    p = np.square(par)
+    m = np.square(means)
+    upandcom = (p[0] - m[0])/m[2]
+    traditio = (p[1] - m[1])/m[3]
+    risk     = p[2]/m[2] + p[3]/m[3]
+
+    index = upandcom + traditio - risk
+    index = np.sqrt(index)
+
+    return index;
 
 def ols_param(x,y):
 # output[0] #slope output[1] #intercept output[2] #err slope output[3] #err intercept
