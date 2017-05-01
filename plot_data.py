@@ -15,8 +15,8 @@ import analyze
 #   -- plot --
 
 mapName   = "./Map/england_pcs_2012_wgs84"
-#dataFile="Pers_Mortage_PCS_2016-q3.xlsx"
-dataFlnm  = "test.xlsx"
+dataFlnm="Pers_Mortage_PCS_2016-q3.xlsx"
+#dataFlnm  = "SME_Lending_PCS_2016-q3.xlsx"
 placeName = "London"
 colName   = 'index'
 
