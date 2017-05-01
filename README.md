@@ -27,7 +27,7 @@ It start by checking for column with dates, and extracting pure data.
 Use then the time series to build an ordinary least square method (OLS) extrapolation, from which extracts slope *m*, intercepts *q*, and respective errors *sm*, *sq*.
 This is motivated because most of the mortgage investments in London area for privates and SME follow a linearly growing trend, with some volatile noise in specific areas (that has a reason and can be accounted in the index).
 
-At this point an index could be inspired by the least squares: *sign(m- &lt;m &gt; )(m-&lt;m &gt;)^2/<sm>^2* to signal how up-and-coming (or declining) an area is, the same function for the intercept *q* to show how traditionally strong it is, and *-(sm-<sm>)^2/<sm>^2* to penalize for the volatility of the investments going on in the area.
+At this point an index could be inspired by the least squares: *sign(m- &lt;m &gt; )(m-&lt;m &gt;)^2/&lt;sm&gt;^2* to signal how up-and-coming (or declining) an area is, the same function for the intercept *q* to show how traditionally strong it is, and *-(sm-&lt;sm&gt;)^2/&lt;sm&gt;^2* to penalize for the volatility of the investments going on in the area.
 
 The method is crude, but 16 datapoints are not enough for a iterative regression (are barely enough for a decent OLS with covariance), the true jump in quality would be considering adjacent postcodes for a nearest (and next-to-nearest) neighbours calculation. Geographical complications of dealing with patches are not fit for a 2 days challenge, but worth considering.
 
