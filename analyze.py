@@ -60,10 +60,10 @@ def add_Index_with_OLS(df):
 
 def calc_index(p,m):
     #print 'p,m', p, m
-    upandcom =   np.square(p[0] - m[0])/np.square(m[2])
-    traditio =   np.square(p[1] - m[1])/np.square(m[3])
-    risk     = ( np.square(p[2] - m[2])/np.square(m[2])
-             +   np.square(p[3] - m[3])/np.square(m[3]) )
+    upandcom =  np.sign(p[0] - m[0])*np.square(p[0] - m[0])/np.square(m[2])
+    traditio =  np.sign(p[0] - m[0])*np.square(p[1] - m[1])/np.square(m[3])
+    risk     = (                     np.square(p[2] - m[2])/np.square(m[2])
+             +                       np.square(p[3] - m[3])/np.square(m[3]) )
 
     index = upandcom + traditio - risk
     #print 'idx', index
