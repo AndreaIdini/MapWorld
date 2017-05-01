@@ -11,6 +11,7 @@ import openpyxl as op
 
 import mapDataPlot
 import scrape
+import analyze
 #   -- plot --
 
 mapName   = "./Map/england_pcs_2012_wgs84"
@@ -25,6 +26,10 @@ rangesList = scrape.search_Ranges_WorkBk(dataFlnm,placeName)
 
 print 'Building Dataframe from ' + dataFlnm + ' ...'
 dataFile = scrape.from_Rng_to_DataFrame(dataFlnm,rangesList)
+
+print 'Analyzing market data...'
+dataFile = analyze.add_Index_with_OLS(dataFile)
+quit()
 
 print 'Building map frame using ' + mapName + ' ...'
 

@@ -6,16 +6,15 @@ import numpy as np
 import matplotlib
 from mpl_toolkits.basemap import Basemap
 
-#- function mP_data takes in input filename and datafile outputs patches for plotting -#
+#- function mP_data takes in input shapefile filename and DataFrame outputs a plot -#
 #- builds up a whole Basemap--based Panda dataframe with the list of patches,
-#- and the corresponding wards names from shapefile and datafile
-#- Input: flnm: string, filename path
+#- and the corresponding postcodes from shapefile and datafile
+#- and use to plot data from a given column name in the given dataframe
+#- Input: flnm    : string, filename path
+#-        colName : string, column name where are data to plot
+#-        df      : DataFrame, containing data.
 #-        (optional)imp: Bool, if to import libraries
-#- output: return to dataframe of
-#-         ['patches'] Polygon patches
-#-         ['properties'] patches properties
-#-         ['area_m']  area in sq meters
-#-         ['area_km'] area in sq km
+#- Output: the enjoyment of vision.
 #- ...
 def mP_data(flnm, colName, df, imp = None):
     num_colors = 10
@@ -172,12 +171,9 @@ def mP_data(flnm, colName, df, imp = None):
 
     legendx1 = newcoords[0]*0.98+leglength*1000.
 
-    # print legendx0, legendx1, legendy
-
     ax.plot([legendx0,legendx1],[legendy, legendy],  'k-', lw=2)
     ax.text(legendx0,legendy*0.96,'0')
     ax.text(legendx1,legendy*0.96,str(int(leglength)))
-
 
     ax.add_collection(pc)
 
